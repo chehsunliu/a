@@ -11,7 +11,7 @@ main = do
   let n = read s :: Integer
 
   s <- getLine
-  let xs = map read (words s )
+  let xs = map read (words s)
 
   print (f n xs)
   return ()
