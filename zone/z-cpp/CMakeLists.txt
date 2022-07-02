@@ -8,4 +8,4 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 
 enable_testing()
 
-add_subdirectory(z-app)
+add_subdirectory(z-main)

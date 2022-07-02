@@ -1,4 +1,4 @@
-project(z-app)
+project(z-main)
 
 add_executable(${PROJECT_NAME} main.cpp)
 
