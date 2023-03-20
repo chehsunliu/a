@@ -1,5 +1,39 @@
 use std::io;
-use std::io::Write;
+use std::io::{BufRead, BufWriter, Write};
+
+struct Scanner<T: BufRead> {
+    buffer: Vec<String>,
+    reader: T,
+}
+
+impl<T: BufRead> Scanner<T> {
+    pub fn new(reader: T) -> Scanner<T> {
+        Scanner {
+            buffer: vec![],
+            reader,
+        }
+    }
+
+    pub fn scan<R>(&mut self) -> R
+    where
+        R: std::str::FromStr,
+        <R as std::str::FromStr>::Err: std::fmt::Debug,
+    {
+        loop {
+            if let Some(token) = self.buffer.pop() {
+                return token.parse().unwrap();
+            }
+
+            let mut s = String::new();
+            self.reader.read_line(&mut s).unwrap();
+            self.buffer = s
+                .split_whitespace()
+                .map(String::from)
+                .rev()
+                .collect::<Vec<String>>()
+        }
+    }
+}
 
 fn solve(a: i32, b: i32, c: i32, d: i32) -> i32 {
     if d < b {
@@ -13,24 +47,20 @@ fn solve(a: i32, b: i32, c: i32, d: i32) -> i32 {
     (d - b) + (a + (d - b) - c)
 }
 
-fn main() -> io::Result<()> {
-    let mut buf = String::new();
-    io::stdin().read_line(&mut buf)?;
-    buf.clear();
+fn main() {
+    let mut scanner = Scanner::new(io::stdin().lock());
+    let mut out = BufWriter::new(io::stdout());
 
-    while io::stdin().read_line(&mut buf)? != 0 {
-        let mut iter = buf.trim_end().split_whitespace();
+    let t = scanner.scan::<i32>();
+    for _ in 0..t {
         let ans = solve(
-            iter.next().unwrap().parse().unwrap(),
-            iter.next().unwrap().parse().unwrap(),
-            iter.next().unwrap().parse().unwrap(),
-            iter.next().unwrap().parse().unwrap(),
+            scanner.scan::<i32>(),
+            scanner.scan::<i32>(),
+            scanner.scan::<i32>(),
+            scanner.scan::<i32>(),
         );
-        io::stdout().write_all((ans.to_string() + "\n").as_bytes())?;
-        buf.clear();
+        writeln!(out, "{}", ans.to_string()).unwrap();
     }
-
-    Ok(())
 }
 
 #[cfg(test)]
