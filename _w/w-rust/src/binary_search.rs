@@ -2,7 +2,7 @@ pub fn search_l<T: PartialOrd>(arr: &[T], x: T) -> i32 {
     let mut l: i32 = 0;
     let mut r: i32 = arr.len() as i32 - 1;
 
-    while l <= r && l < arr.len() as i32 && 0 <= r {
+    while l <= r {
         let m = (l + r) / 2;
 
         if x <= arr[m as usize] {
@@ -19,7 +19,7 @@ pub fn search_r<T: PartialOrd>(arr: &[T], x: T) -> i32 {
     let mut l: i32 = 0;
     let mut r: i32 = arr.len() as i32 - 1;
 
-    while l <= r && l < arr.len() as i32 && 0 <= r {
+    while l <= r {
         let m = (l + r) / 2;
 
         if x < arr[m as usize] {
