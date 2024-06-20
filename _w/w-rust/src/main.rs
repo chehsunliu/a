@@ -4,7 +4,7 @@ use std::io::{self};
 // 2^32 = (2^10)^3 * 4 ~= 10^9 * 4
 fn main() -> io::Result<()> {
     let mut buf = String::new();
-    let mut ans = 0;
+    let mut cards: Vec<Card> = vec![];
 
     while io::stdin().read_line(&mut buf)? != 0 {
         let mut s_iter = buf.trim().splitn(2, ": ");
@@ -26,27 +26,32 @@ fn main() -> io::Result<()> {
             .collect::<Vec<i32>>();
         buf.clear();
 
-        ans += solve(winning_nums, nums);
+        cards.push(Card {
+            winning_nums: HashSet::from_iter(winning_nums),
+            nums: HashSet::from_iter(nums),
+        })
     }
 
-    println!("{}", ans);
+    println!("{}", solve(cards));
 
     Ok(())
 }
 
-fn solve(winning_nums: Vec<i32>, nums: Vec<i32>) -> i32 {
-    let winning_nums = winning_nums.into_iter().collect::<HashSet<i32>>();
-    let mut count = 0;
+struct Card {
+    winning_nums: HashSet<i32>,
+    nums: HashSet<i32>,
+}
 
-    for num in &nums {
-        if winning_nums.contains(&num) {
-            count += 1;
+fn solve(cards: Vec<Card>) -> i32 {
+    let mut counts: Vec<usize> = vec![0; cards.len()];
+
+    for (i, card) in cards.iter().enumerate() {
+        let count = card.winning_nums.intersection(&card.nums).count();
+        counts[i] += 1;
+        for j in 1..(count + 1) {
+            counts[i + j] += counts[i];
         }
     }
 
-    if count > 0 {
-        1 << (count - 1)
-    } else {
-        0
-    }
+    counts.iter().sum::<usize>() as i32
 }
