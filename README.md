@@ -4,13 +4,29 @@ a
 
 ## Accounts
 
-CodeChef: https://www.codechef.com/users/chehsunliu
-
 Codeforces: https://codeforces.com/profile/chehsunliu
 
-Codewars: https://www.codewars.com/users/chehsunliu
-
 CSES Problem Set: https://cses.fi/user/112906
+
+### CodeChef
+
+me:
+- https://www.codechef.com/users/chehsunliu
+
+other people:
+- https://www.codechef.com/users/alon21034
+- https://www.codechef.com/users/johnathan79717
+- https://www.codechef.com/users/steve8625
+- https://www.codechef.com/users/stimim
+
+### Codewars
+
+me:
+- https://www.codewars.com/users/chehsunliu
+
+other people:
+- https://www.codewars.com/users/aitjcize
+- https://www.codewars.com/users/steve8625
 
 ### LeetCode
 
