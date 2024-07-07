@@ -1,8 +1,8 @@
 use std::cmp::max;
 use std::io::{self};
 
-fn solve(nums: Vec<i32>) -> i32 {
-    let mut max_sum = 0;
+fn solve(nums: Vec<i64>) -> i64 {
+    let mut max_sum = i64::MIN;
 
     for i in 0..nums.len() {
         let mut sum = 0;
@@ -26,8 +26,8 @@ fn main() -> io::Result<()> {
         let nums = buf
             .trim()
             .split_whitespace()
-            .map(|token| token.parse::<i32>().unwrap())
-            .collect::<Vec<i32>>();
+            .map(|token| token.parse::<i64>().unwrap())
+            .collect::<Vec<i64>>();
         buf.clear();
         println!("{}", solve(nums));
     }
