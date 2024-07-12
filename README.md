@@ -29,6 +29,7 @@ CSES Problem Set: https://cses.fi/user/112906
 - https://leetcode.com/u/alon21034/
 - https://leetcode.com/u/androchentw/
 - https://leetcode.com/u/benpatsai/
+- https://leetcode.com/u/goodseeyou/
 - https://leetcode.com/u/joeyhst/
 - https://leetcode.com/u/lc85301/
 - https://leetcode.com/u/rosaniline/
