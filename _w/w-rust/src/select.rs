@@ -6,25 +6,26 @@ fn select_kth_smallest_recursive(nums: &[i32], k: usize) -> i32 {
 
     let mut nums_l: Vec<i32> = vec![];
     let mut nums_r: Vec<i32> = vec![];
+    let mut m_count = 0;
 
     for i in 0..nums.len() {
-        if i == m {
-            continue;
-        }
-
-        if nums[i] >= nums[m] {
+        if nums[i] > nums[m] {
             nums_r.push(nums[i]);
-        } else {
+        } else if nums[i] < nums[m] {
             nums_l.push(nums[i]);
+        } else {
+            m_count += 1;
         }
     }
 
-    if k == nums_l.len() {
-        nums[m]
-    } else if k < nums_l.len() {
+    // 3 4 2
+    // 0 1 2 | 3 4 5 6 | 7 8
+    if k < nums_l.len() {
         select_kth_smallest_recursive(&nums_l, k)
+    } else if k >= nums_l.len() + m_count {
+        select_kth_smallest_recursive(&nums_r, k - nums_l.len() - m_count)
     } else {
-        select_kth_smallest_recursive(&nums_r, k - nums_l.len() - 1)
+        nums[m]
     }
 }
 
@@ -35,26 +36,25 @@ fn select_kth_smallest(mut nums: Vec<i32>, mut k: usize) -> i32 {
 
         let mut nums_l: Vec<i32> = vec![];
         let mut nums_r: Vec<i32> = vec![];
+        let mut m_count = 0;
 
         for i in 0..nums.len() {
-            if i == m {
-                continue;
-            }
-
-            if nums[i] >= nums[m] {
+            if nums[i] > nums[m] {
                 nums_r.push(nums[i]);
-            } else {
+            } else if nums[i] < nums[m] {
                 nums_l.push(nums[i]);
+            } else {
+                m_count += 1;
             }
         }
 
-        if k == nums_l.len() {
-            return nums[m];
-        } else if k < nums_l.len() {
+        if k < nums_l.len() {
             nums = nums_l;
-        } else {
+        } else if k >= nums_l.len() + m_count {
             nums = nums_r;
-            k = k - nums_l.len() - 1;
+            k = k - nums_l.len() - m_count;
+        } else {
+            return nums[m];
         }
     }
 }
@@ -78,14 +78,27 @@ mod tests {
         assert_eq!(select_kth_smallest(vec![12, 5], 0), 5);
         assert_eq!(select_kth_smallest(vec![12, 5], 1), 12);
 
-        let v3 = vec![12, 5, 16, 1, 7, 55, 27];
-        assert_eq!(select_kth_smallest(v3.clone(), 0), 1);
-        assert_eq!(select_kth_smallest(v3.clone(), 1), 5);
-        assert_eq!(select_kth_smallest(v3.clone(), 2), 7);
-        assert_eq!(select_kth_smallest(v3.clone(), 3), 12);
-        assert_eq!(select_kth_smallest(v3.clone(), 4), 16);
-        assert_eq!(select_kth_smallest(v3.clone(), 5), 27);
-        assert_eq!(select_kth_smallest(v3.clone(), 6), 55);
+        let v = vec![12, 5, 16, 1, 7, 55, 27];
+        assert_eq!(select_kth_smallest(v.clone(), 0), 1);
+        assert_eq!(select_kth_smallest(v.clone(), 1), 5);
+        assert_eq!(select_kth_smallest(v.clone(), 2), 7);
+        assert_eq!(select_kth_smallest(v.clone(), 3), 12);
+        assert_eq!(select_kth_smallest(v.clone(), 4), 16);
+        assert_eq!(select_kth_smallest(v.clone(), 5), 27);
+        assert_eq!(select_kth_smallest(v.clone(), 6), 55);
+
+        let v = vec![3, 2, 4, 1, 1, 2, 2, 2, 2, 2, 5];
+        assert_eq!(select_kth_smallest(v.clone(), 0), 1);
+        assert_eq!(select_kth_smallest(v.clone(), 1), 1);
+        assert_eq!(select_kth_smallest(v.clone(), 2), 2);
+        assert_eq!(select_kth_smallest(v.clone(), 3), 2);
+        assert_eq!(select_kth_smallest(v.clone(), 4), 2);
+        assert_eq!(select_kth_smallest(v.clone(), 5), 2);
+        assert_eq!(select_kth_smallest(v.clone(), 6), 2);
+        assert_eq!(select_kth_smallest(v.clone(), 7), 2);
+        assert_eq!(select_kth_smallest(v.clone(), 8), 3);
+        assert_eq!(select_kth_smallest(v.clone(), 9), 4);
+        assert_eq!(select_kth_smallest(v.clone(), 10), 5);
     }
 
     #[test]
@@ -95,13 +108,26 @@ mod tests {
         assert_eq!(select_kth_smallest_recursive(&vec![12, 5], 0), 5);
         assert_eq!(select_kth_smallest_recursive(&vec![12, 5], 1), 12);
 
-        let v3 = vec![12, 5, 16, 1, 7, 55, 27];
-        assert_eq!(select_kth_smallest_recursive(&v3, 0), 1);
-        assert_eq!(select_kth_smallest_recursive(&v3, 1), 5);
-        assert_eq!(select_kth_smallest_recursive(&v3, 2), 7);
-        assert_eq!(select_kth_smallest_recursive(&v3, 3), 12);
-        assert_eq!(select_kth_smallest_recursive(&v3, 4), 16);
-        assert_eq!(select_kth_smallest_recursive(&v3, 5), 27);
-        assert_eq!(select_kth_smallest_recursive(&v3, 6), 55);
+        let v = vec![12, 5, 16, 1, 7, 55, 27];
+        assert_eq!(select_kth_smallest_recursive(&v, 0), 1);
+        assert_eq!(select_kth_smallest_recursive(&v, 1), 5);
+        assert_eq!(select_kth_smallest_recursive(&v, 2), 7);
+        assert_eq!(select_kth_smallest_recursive(&v, 3), 12);
+        assert_eq!(select_kth_smallest_recursive(&v, 4), 16);
+        assert_eq!(select_kth_smallest_recursive(&v, 5), 27);
+        assert_eq!(select_kth_smallest_recursive(&v, 6), 55);
+
+        let v = vec![3, 2, 4, 1, 1, 2, 2, 2, 2, 2, 5];
+        assert_eq!(select_kth_smallest_recursive(&v, 0), 1);
+        assert_eq!(select_kth_smallest_recursive(&v, 1), 1);
+        assert_eq!(select_kth_smallest_recursive(&v, 2), 2);
+        assert_eq!(select_kth_smallest_recursive(&v, 3), 2);
+        assert_eq!(select_kth_smallest_recursive(&v, 4), 2);
+        assert_eq!(select_kth_smallest_recursive(&v, 5), 2);
+        assert_eq!(select_kth_smallest_recursive(&v, 6), 2);
+        assert_eq!(select_kth_smallest_recursive(&v, 7), 2);
+        assert_eq!(select_kth_smallest_recursive(&v, 8), 3);
+        assert_eq!(select_kth_smallest_recursive(&v, 9), 4);
+        assert_eq!(select_kth_smallest_recursive(&v, 10), 5);
     }
 }

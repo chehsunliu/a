@@ -14,26 +14,25 @@ fn select_kth_smallest(mut nums: Vec<i32>, mut k: usize) -> i32 {
 
         let mut nums_l: Vec<i32> = vec![];
         let mut nums_r: Vec<i32> = vec![];
+        let mut m_count = 0;
 
         for i in 0..nums.len() {
-            if i == m {
-                continue;
-            }
-
-            if nums[i] >= nums[m] {
+            if nums[i] > nums[m] {
                 nums_r.push(nums[i]);
-            } else {
+            } else if nums[i] < nums[m] {
                 nums_l.push(nums[i]);
+            } else {
+                m_count += 1;
             }
         }
 
-        if k == nums_l.len() {
-            return nums[m];
-        } else if k < nums_l.len() {
+        if k < nums_l.len() {
             nums = nums_l;
-        } else {
+        } else if k >= nums_l.len() + m_count {
             nums = nums_r;
-            k = k - nums_l.len() - 1;
+            k = k - nums_l.len() - m_count;
+        } else {
+            return nums[m];
         }
     }
 }
