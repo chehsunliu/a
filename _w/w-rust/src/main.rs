@@ -1,4 +1,3 @@
-use std::collections::HashMap;
 use std::io::{self};
 
 // 2^32 = (2^10)^3 * 4 ~= 10^9 * 4
@@ -25,24 +24,23 @@ fn solve(reports: Vec<Vec<i32>>) -> i32 {
     let mut ans = 0;
 
     for report in &reports {
-        let &(_, r, c) = &report[1..].iter().fold(
-            (report[0], true, (0, 0)),
-            |(prev_v, prev_r, (mut c1, mut c2)), &v| {
-                let diff = (prev_v - v).abs();
-                if prev_v > v {
-                    c1 += 1;
-                } else {
-                    c2 += 1;
-                }
-                (v, prev_r && (diff >= 1 && diff <= 3), (c1, c2))
-            },
-        );
-        ans += if r && ((c.0 == 0 && c.1 != 0) || (c.0 != 0 && c.1 == 0)) {
-            1
-        } else {
-            0
-        };
+        ans += if is_safe(report) { 1 } else { 0 };
     }
 
     ans
+}
+
+fn is_safe(report: &[i32]) -> bool {
+    let mut prev_v = report[0];
+    let mut safe = true;
+    let mut flags = (false, false);
+
+    for &v in &report[1..] {
+        let diff = v - prev_v;
+        safe &= diff.abs() >= 1 && diff.abs() <= 3;
+        flags = (flags.0 || (diff >= 0), flags.1 || (diff < 0));
+        prev_v = v;
+    }
+
+    safe && (flags.0 ^ flags.1)
 }
