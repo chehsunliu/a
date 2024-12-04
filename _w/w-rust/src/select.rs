@@ -1,6 +1,6 @@
 use rand::random;
 
-fn select_kth_smallest_recursive(nums: &[i32], k: usize) -> i32 {
+pub fn select_kth_smallest_recursive(nums: &[i32], k: usize) -> i32 {
     // ... < m <= ...
     let m = random::<usize>() % nums.len();
 
@@ -29,7 +29,7 @@ fn select_kth_smallest_recursive(nums: &[i32], k: usize) -> i32 {
     }
 }
 
-fn select_kth_smallest(mut nums: Vec<i32>, mut k: usize) -> i32 {
+pub fn select_kth_smallest(mut nums: Vec<i32>, mut k: usize) -> i32 {
     // ... < m <= ...
     loop {
         let m = random::<usize>() % nums.len();

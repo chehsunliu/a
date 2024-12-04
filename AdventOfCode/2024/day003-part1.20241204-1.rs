@@ -11,30 +11,44 @@ fn main() -> io::Result<()> {
         buf.clear();
     }
 
-    println!("{}", solve(lines));
+    println!("{}", Solver::new().solve(lines));
 
     Ok(())
 }
 
-fn solve(lines: Vec<String>) -> i32 {
-    let mut ans = 0;
-
-    for line in lines {
-        ans += solve_line(line);
-    }
-
-    ans
+struct Solver {
+    re_mul: Regex,
 }
 
-fn solve_line(line: String) -> i32 {
-    let re: Regex = Regex::new(r"mul\(([0-9]+),([0-9]+)\)").unwrap();
-
-    let mut v = 0;
-    for (_, [v1, v2]) in re.captures_iter(line.as_str()).map(|c| c.extract()) {
-        let v1 = v1.parse::<i32>().unwrap();
-        let v2 = v2.parse::<i32>().unwrap();
-        v += v1 * v2;
+impl Solver {
+    pub fn new() -> Solver {
+        Self {
+            re_mul: Regex::new(r"mul\(([0-9]+),([0-9]+)\)").unwrap(),
+        }
     }
 
-    v
+    pub fn solve(&self, lines: Vec<String>) -> i32 {
+        let mut ans = 0;
+
+        for line in lines {
+            ans += self.solve_line(line);
+        }
+
+        ans
+    }
+
+    fn solve_line(&self, line: String) -> i32 {
+        let mut v = 0;
+        for (_, [v1, v2]) in self
+            .re_mul
+            .captures_iter(line.as_str())
+            .map(|c| c.extract())
+        {
+            let v1 = v1.parse::<i32>().unwrap();
+            let v2 = v2.parse::<i32>().unwrap();
+            v += v1 * v2;
+        }
+
+        v
+    }
 }

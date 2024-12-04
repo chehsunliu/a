@@ -1,4 +1,4 @@
-fn sort_array(arr: &[i32]) -> Vec<i32> {
+pub fn sort_array(arr: &[i32]) -> Vec<i32> {
     let mut odds_indexes = vec![];
     let mut odds = vec![];
     let mut ans = arr.iter().map(|v| *v).collect::<Vec<i32>>();
