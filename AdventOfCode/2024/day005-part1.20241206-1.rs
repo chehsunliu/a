@@ -15,7 +15,7 @@ impl Solver {
         for i in 0..values.len() {
             for j in i + 1..values.len() {
                 let (v1, v2) = (values[i], values[j]);
-                
+
                 if let Some(set) = self.rules.get(&v2) {
                     if set.contains(&v1) {
                         return 0;
@@ -23,15 +23,36 @@ impl Solver {
                 }
             }
         }
-        
+
         values[values.len() / 2]
     }
 }
 
 // 2^32 = (2^10)^3 * 4 ~= 10^9 * 4
 fn main() -> io::Result<()> {
+    let rules = create_rules()?;
+
+    let solver = Solver::new(rules);
+    let mut ans = 0;
     let mut buf = String::new();
 
+    while io::stdin().read_line(&mut buf)? != 0 {
+        let values = buf
+            .trim()
+            .split(',')
+            .map(|s| s.parse::<i32>().unwrap())
+            .collect::<Vec<i32>>();
+        ans += solver.solve(values);
+        buf.clear();
+    }
+
+    println!("{}", ans);
+
+    Ok(())
+}
+
+fn create_rules() -> io::Result<HashMap<i32, HashSet<i32>>> {
+    let mut buf = String::new();
     let mut rules: HashMap<i32, HashSet<i32>> = HashMap::new();
 
     while io::stdin().read_line(&mut buf)? != 0 {
@@ -52,20 +73,5 @@ fn main() -> io::Result<()> {
         buf.clear();
     }
 
-    let solver = Solver::new(rules);
-    let mut ans = 0;
-
-    while io::stdin().read_line(&mut buf)? != 0 {
-        let values = buf
-            .trim()
-            .split(',')
-            .map(|s| s.parse::<i32>().unwrap())
-            .collect::<Vec<i32>>();
-        ans += solver.solve(values);
-        buf.clear();
-    }
-
-    println!("{}", ans);
-
-    Ok(())
+    Ok(rules)
 }
