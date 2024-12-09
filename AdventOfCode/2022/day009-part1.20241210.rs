@@ -1,5 +1,4 @@
-use std::collections::{HashMap, HashSet};
-use std::ops::Sub;
+use std::collections::HashSet;
 
 #[derive(Debug, Copy, Clone)]
 enum Direction {
@@ -23,15 +22,11 @@ impl Direction {
 
 struct Point {
     pos: (i32, i32),
-    tracks: HashSet<(i32, i32)>,
 }
 
 impl Point {
     fn new() -> Self {
-        Self {
-            pos: (0, 0),
-            tracks: HashSet::from([(0, 0)]),
-        }
+        Self { pos: (0, 0) }
     }
 
     fn move_one_step(&mut self, direction: Direction) {
@@ -43,7 +38,7 @@ impl Point {
         }
     }
 
-    fn tailgate(&mut self, other: &Self) {
+    fn tailgate(&mut self, other: &Self) -> (i32, i32) {
         self.pos = if self.pos.0.abs_diff(other.pos.0) <= 1 && self.pos.1.abs_diff(other.pos.1) <= 1
         {
             self.pos
@@ -61,7 +56,7 @@ impl Point {
             }
         };
 
-        self.tracks.insert(self.pos);
+        self.pos
     }
 }
 
@@ -69,14 +64,16 @@ fn simulate(movements: &[(Direction, i32)]) -> i32 {
     let mut head = Point::new();
     let mut tail = Point::new();
 
+    let mut tracks: HashSet<(i32, i32)> = HashSet::new();
+
     for &(direction, steps) in movements {
         for _ in 0..steps {
             head.move_one_step(direction);
-            tail.tailgate(&head);
+            tracks.insert(tail.tailgate(&head));
         }
     }
 
-    tail.tracks.len() as i32
+    tracks.len() as i32
 }
 
 // 2^32 = (2^10)^3 * 4 ~= 10^9 * 4
