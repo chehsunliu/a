@@ -1,18 +1,35 @@
-use std::collections::HashMap;
+use std::collections::{HashMap, HashSet};
 
 impl Solution {
-    pub fn contains_duplicate(nums: Vec<i32>) -> bool {
-        let mut counts: HashMap<i32, i32> = HashMap::new();
+    pub fn is_anagram(s: String, t: String) -> bool {
+        let (c1, c2) = (Self::f(s), Self::f(t));
 
-        nums.iter().for_each(|v| {
-            if let Some(count) = counts.get_mut(v) {
-                *count += 1;
-            } else {
-                counts.insert(*v, 1);
+        let (k1, k2): (HashSet<char>, HashSet<char>) = (
+            HashSet::from_iter(c1.keys().map(|c| *c)),
+            HashSet::from_iter(c2.keys().map(|c| *c)),
+        );
+
+        if k1.len() != k2.len() || !k1.is_subset(&k2) {
+            return false;
+        }
+
+        for c in k1.iter() {
+            if c1.get(c).unwrap() != c2.get(c).unwrap() {
+                return false;
             }
-        });
+        }
 
-        counts.values().any(|count| *count >= 2)
+        true
+    }
+
+    fn f(s: String) -> HashMap<char, i32> {
+        let mut r = HashMap::new();
+
+        for c in s.chars() {
+            r.insert(c, r.get(&c).unwrap_or(&0) + 1);
+        }
+
+        r
     }
 }
 
