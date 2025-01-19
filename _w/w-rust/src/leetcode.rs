@@ -1,12 +1,18 @@
+use std::collections::HashMap;
+
 impl Solution {
-    pub fn get_concatenation(nums: Vec<i32>) -> Vec<i32> {
-        let mut ans = nums.clone();
+    pub fn contains_duplicate(nums: Vec<i32>) -> bool {
+        let mut counts: HashMap<i32, i32> = HashMap::new();
 
-        for v in &nums {
-            ans.push(*v);
-        }
+        nums.iter().for_each(|v| {
+            if let Some(count) = counts.get_mut(v) {
+                *count += 1;
+            } else {
+                counts.insert(*v, 1);
+            }
+        });
 
-        ans
+        counts.values().any(|count| *count >= 2)
     }
 }
 
