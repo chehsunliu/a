@@ -1,18 +1,22 @@
 impl Solution {
-    pub fn replace_elements(arr: Vec<i32>) -> Vec<i32> {
-        let mut ans = vec![];
+    pub fn is_subsequence(s: String, t: String) -> bool {
+        f(s.as_bytes(), t.as_bytes())
+    }
+}
 
-        let mut m = 0;
-        for &v in arr.iter().rev() {
-            m = m.max(v);
-            ans.push(m);
-        }
+fn f(s: &[u8], t: &[u8]) -> bool {
+    if s.is_empty() {
+        return true;
+    }
 
-        ans.pop();
-        ans.reverse();
-        ans.push(-1);
+    if t.is_empty() {
+        return false;
+    }
 
-        ans
+    if s[0] == t[0] {
+        f(&s[1..], &t[1..])
+    } else {
+        f(s, &t[1..])
     }
 }
 
