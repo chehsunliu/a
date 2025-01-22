@@ -1,21 +1,47 @@
-use std::collections::HashMap;
-
 impl Solution {
-    pub fn top_k_frequent(nums: Vec<i32>, k: i32) -> Vec<i32> {
-        let mut counter: HashMap<i32, i32> = HashMap::new();
-        for v in &nums {
-            counter.insert(*v, counter.get(v).unwrap_or(&0) + 1);
-        }
-
-        let mut counter = counter
-            .iter()
-            .map(|(k, v)| (*k, *v))
-            .collect::<Vec<(i32, i32)>>();
-        counter.sort_by(|&c1, &c2| c1.1.cmp(&c2.1).reverse());
-
-        counter[..k as usize].iter().map(|(k, _)| *k).collect()
+    pub fn sort_array(mut nums: Vec<i32>) -> Vec<i32> {
+        heap_sort(&mut nums);
+        nums
     }
 }
+
+fn max_heapify(nums: &mut Vec<i32>, i: usize, heap_size: usize) {
+    let (l, r) = (i * 2 + 1, i * 2 + 2);
+    let largest_i = if l < heap_size && nums[l] > nums[i] {
+        l
+    } else {
+        i
+    };
+    let largest_i = if r < heap_size && nums[r] > nums[largest_i] {
+        r
+    } else {
+        largest_i
+    };
+
+    if i != largest_i {
+        nums.swap(i, largest_i);
+        max_heapify(nums, largest_i, heap_size);
+    }
+}
+
+fn build_max_heap(nums: &mut Vec<i32>) {
+    for i in (0..nums.len() / 2).rev() {
+        max_heapify(nums, i, nums.len());
+    }
+}
+
+fn heap_sort(nums: &mut Vec<i32>) {
+    build_max_heap(nums);
+
+    for i in (0..nums.len()).rev() {
+        nums.swap(0, i);
+        max_heapify(nums, 0, i);
+    }
+}
+
+//    0
+//  1   2
+// 3 4 5 6
 
 pub struct Solution;
 
