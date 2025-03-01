@@ -1,10 +1,23 @@
 class Solution:
-    def isPalindrome(self, s: str) -> bool:
-        s = "".join([c.lower() for c in s if c.isalnum()])
-        l, r = 0, len(s) - 1
-        while l < r:
-            if s[l] != s[r]:
-                return False
-            l += 1
-            r -= 1
-        return True
+    def twoSum(self, numbers: List[int], target: int) -> List[int]:
+        m = {}
+        for i, v in enumerate(numbers):
+            if v not in m:
+                m[v] = set()
+            m[v].add(i)
+
+        for i, v in enumerate(numbers):
+            if target - v not in m:
+                continue
+
+            js = m[target - v]
+
+            if target == v * 2:
+                if len(js) == 1:
+                    continue
+                js.remove(i)
+
+            j = list(js)[0]
+            return [min(i, j) + 1, max(i, j) + 1]
+
+        raise Exception("GG")
